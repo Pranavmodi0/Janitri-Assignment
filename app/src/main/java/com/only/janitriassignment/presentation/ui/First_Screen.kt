@@ -52,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -141,6 +142,7 @@ fun First_Screen(
 
                     Box(
                         modifier = Modifier
+                            .requiredSize(width = 130.dp, height = 40.dp)
                             .background(TopBar),
                         contentAlignment = Alignment.Center
                     ) {
@@ -155,7 +157,7 @@ fun First_Screen(
 
                     Box(
                         modifier = Modifier
-                            .requiredSize(width = 71.dp, height = 40.dp)
+                            .requiredSize(width = 64.dp, height = 40.dp)
                             .background(ButtonBackground, shape = RoundedCornerShape(20.dp)),
                         contentAlignment = Alignment.Center
                     ) {
@@ -180,11 +182,18 @@ fun First_Screen(
                             )
 
                             Image(
-                                modifier = Modifier.size(25.dp)
-                                    .clickable {
-                                        viewModel.syncColors()
-                                        rotationState += 360f
-                                               }
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .then(
+                                        if (isConnected.value) {
+                                            Modifier.clickable {
+                                                viewModel.syncColors()
+                                                rotationState += 360f
+                                            }
+                                        } else {
+                                            Modifier.alpha(0.5f)
+                                        }
+                                    )
                                     .graphicsLayer(rotationZ = rotation),
                                 painter = painterResource(R.drawable.refresh),
                                 contentDescription = "Refresh"
@@ -202,13 +211,31 @@ fun First_Screen(
             ) {
                 Connection(isConnected)
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(16.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(colors) { color->
-                        Items(color, inriaSansFamily)
+                if(colors.isEmpty()){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(
+                            text = "No colors added yet",
+                            color = Color.Black,
+                            fontSize = 20.sp,
+                            fontFamily = inriaSansFamily
+                        )
+                    }
+
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(16.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(colors) { color ->
+                            Items(color, inriaSansFamily)
+                        }
                     }
                 }
             }
@@ -343,7 +370,9 @@ fun Connection(isConnected: MutableState<Boolean>) {
                 .padding(8.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -383,7 +412,9 @@ fun Connection(isConnected: MutableState<Boolean>) {
                 .padding(8.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
