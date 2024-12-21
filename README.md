@@ -26,7 +26,7 @@ In this project I used
 - *splash screen* to show branding image at cold start.
 - Neatly Documnted Code
 
-[Download from Google Drive](https://drive.google.com/file/d/1VGSW4q2h25waIPGsaqPSHI7P15OdXKc2/view?usp=sharing)
+[Download Link](https://drive.google.com/file/d/1tXTLbCvaLMGwtfuTdHH1FeNciEVjI3Ld/view?usp=sharing)
 
 ### Project Structure
 - *Data* 
